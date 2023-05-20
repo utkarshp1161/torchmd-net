@@ -120,7 +120,7 @@ def main():
     pl.seed_everything(args.seed, workers=True)
 
     # initialize data module
-    data = DataModule(args)
+    data = DataModule(args)# takes all args
     data.prepare_data()
     data.setup("fit")
 

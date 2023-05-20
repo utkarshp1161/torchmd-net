@@ -9,7 +9,7 @@ cutoff_upper: 5.0
 dataset: MD17
 dataset_arg:
   molecules: aspirin
-dataset_root: ~/data
+dataset_root: /home/sire/phd/srz228573/benchmarking_datasets/torchmdnet_data
 derivative: true
 distance_influence: both
 early_stopping_patience: 300

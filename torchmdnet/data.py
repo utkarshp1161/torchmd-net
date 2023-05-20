@@ -13,7 +13,7 @@ from torch_scatter import scatter
 class DataModule(LightningDataModule):
     def __init__(self, hparams, dataset=None):
         super(DataModule, self).__init__()
-        self.save_hyperparameters(hparams)
+        self.save_hyperparameters(hparams)# hparams is args
         self._mean, self._std = None, None
         self._saved_dataloaders = dict()
         self.dataset = dataset
@@ -31,9 +31,12 @@ class DataModule(LightningDataModule):
                 dataset_arg = {}
                 if self.hparams["dataset_arg"] is not None:
                     dataset_arg = self.hparams["dataset_arg"]
+                
+                
                 self.dataset = getattr(datasets, self.hparams["dataset"])(
                     self.hparams["dataset_root"], **dataset_arg
                 )
+                # if self.hparams["dataset_arg"] is md17:  torchmdnet/datasets/md17.py -> MD17
 
         self.idx_train, self.idx_val, self.idx_test = make_splits(
             len(self.dataset),

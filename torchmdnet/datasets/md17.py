@@ -12,16 +12,27 @@ class MD17(InMemoryDataset):
 
     raw_url = "http://www.quantum-machine.org/gdml/data/npz/"
 
+    # molecule_files = dict(
+    #     aspirin="aspirin_dft.npz",
+    #     benzene="benzene_old_dft.npz",
+    #     ethanol="ethanol_dft.npz",
+    #     malonaldehyde="malonaldehyde_dft.npz",
+    #     naphthalene="naphthalene_dft.npz",
+    #     salicylic_acid="salicylic_dft.npz",
+    #     toluene="toluene_dft.npz",
+    #     uracil="uracil_dft.npz",
+    # )
     molecule_files = dict(
-        aspirin="aspirin_dft.npz",
-        benzene="benzene_old_dft.npz",
-        ethanol="ethanol_dft.npz",
-        malonaldehyde="malonaldehyde_dft.npz",
-        naphthalene="naphthalene_dft.npz",
-        salicylic_acid="salicylic_dft.npz",
-        toluene="toluene_dft.npz",
-        uracil="uracil_dft.npz",
+        aspirin="md17_aspirin.npz",
+        benzene="md17_benzene2017.npz",
+        ethanol="md17_ethanol.npz",
+        malonaldehyde="md17_malonaldehyde.npz",
+        naphthalene="md17_naphthalene.npz",
+        salicylic_acid="md17_salicylic.npz",
+        toluene="md17_toluene.npz",
+        uracil="md17_uracil.npz",
     )
+    
 
     available_molecules = list(molecule_files.keys())
 
@@ -81,6 +92,8 @@ class MD17(InMemoryDataset):
 
     def download(self):
         for file_name in self.raw_file_names:
+            import pdb as pdb
+            pdb.set_trace()
             download_url(MD17.raw_url + file_name, self.raw_dir)
 
     def process(self):
