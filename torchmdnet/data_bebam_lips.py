@@ -8,6 +8,7 @@ from pytorch_lightning.utilities import rank_zero_warn
 from torchmdnet import datasets
 from torchmdnet.utils import make_splits, MissingEnergyException
 from torch_scatter import scatter
+import  torchmdnet.datasets.npz_lips as md17_dataset
 
 
 class DataModule(LightningDataModule):
@@ -19,41 +20,41 @@ class DataModule(LightningDataModule):
         self.dataset = dataset
 
     def setup(self, stage):
-        if self.dataset is None:
-            if self.hparams["dataset"] == "Custom":
-                self.dataset = datasets.Custom(
-                    self.hparams["coord_files"],
-                    self.hparams["embed_files"],
-                    self.hparams["energy_files"],
-                    self.hparams["force_files"],
-                )
-            else:#
-                dataset_arg = {}
-                if self.hparams["dataset_arg"] is not None:
-                    dataset_arg = self.hparams["dataset_arg"]
+        # if self.dataset is None:
+            # if self.hparams["dataset"] == "Custom":
+            #     self.dataset = datasets.Custom(
+            #         self.hparams["coord_files"],
+            #         self.hparams["embed_files"],
+            #         self.hparams["energy_files"],
+            #         self.hparams["force_files"],
+            #     )
+            # else:#
+            #     dataset_arg = {}
+            #     if self.hparams["dataset_arg"] is not None:
+            #         dataset_arg = self.hparams["dataset_arg"]
                 
                 
-                self.dataset = getattr(datasets, self.hparams["dataset"])(# read the datatset:torchmdnet/datasets/md17.py
-                    self.hparams["dataset_root"], **dataset_arg
-                )
+            #     self.dataset = getattr(datasets, self.hparams["dataset"])(# read the datatset:torchmdnet/datasets/md17.py
+            #         self.hparams["dataset_root"], **dataset_arg
+            #     )
 
 
-        self.idx_train, self.idx_val, self.idx_test = make_splits(
-            len(self.dataset),
-            self.hparams["train_size"],
-            self.hparams["val_size"],
-            self.hparams["test_size"],
-            self.hparams["seed"],
-            join(self.hparams["log_dir"], "splits.npz"),
-            self.hparams["splits"],
-        )
-        print(
-            f"train {len(self.idx_train)}, val {len(self.idx_val)}, test {len(self.idx_test)}"
-        )
+        # self.idx_train, self.idx_val, self.idx_test = make_splits(
+        #     len(self.dataset),
+        #     self.hparams["train_size"],
+        #     self.hparams["val_size"],
+        #     self.hparams["test_size"],
+        #     self.hparams["seed"],
+        #     join(self.hparams["log_dir"], "splits.npz"),
+        #     self.hparams["splits"],
+        # )
+        # print(
+        #     f"train {len(self.idx_train)}, val {len(self.idx_val)}, test {len(self.idx_test)}"
+        # )
 
-        self.train_dataset = Subset(self.dataset, self.idx_train)
-        self.val_dataset = Subset(self.dataset, self.idx_val)
-        self.test_dataset = Subset(self.dataset, self.idx_test)
+        self.train_dataset = md17_dataset.get_md17_datasets(self.hparams["dataset_root"]  + "train")
+        self.val_dataset = md17_dataset.get_md17_datasets(self.hparams["dataset_root"]  + "val")
+        self.test_dataset = md17_dataset.get_md17_datasets(self.hparams["dataset_root"]  + "test")
 
         if self.hparams["standardize"]:
             self._standardize()

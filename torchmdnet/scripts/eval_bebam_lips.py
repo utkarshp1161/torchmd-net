@@ -9,7 +9,7 @@ from pytorch_lightning.loggers import CSVLogger, WandbLogger
 from pytorch_lightning.strategies.ddp import DDPStrategy
 from torchmdnet.module import LNNP
 from torchmdnet import datasets, priors, models
-from torchmdnet.data import DataModule
+from torchmdnet.data_bebam_lips import DataModule
 from torchmdnet.models import output_modules
 from torchmdnet.models.model import create_prior_models
 from torchmdnet.models.utils import rbf_class_mapping, act_class_mapping
@@ -128,16 +128,16 @@ def main():
     args.prior_args = [p.get_init_args() for p in prior_models]
 
     # initialize lightning module
-    model = LNNP(args, prior_model=prior_models, mean=data.mean, std=data.std)
+    #model = LNNP(args, prior_model=prior_models, mean=data.mean, std=data.std)
 
-    checkpoint_callback = ModelCheckpoint(
-        dirpath=args.log_dir,
-        monitor="val_loss",
-        save_top_k=10,  # -1 to save all
-        every_n_epochs=args.save_interval,
-        filename="{epoch}-{val_loss:.4f}-{test_loss:.4f}",
-    )
-    early_stopping = EarlyStopping("val_loss", patience=args.early_stopping_patience)
+    # checkpoint_callback = ModelCheckpoint(
+    #     dirpath=args.log_dir,
+    #     monitor="val_loss",
+    #     save_top_k=10,  # -1 to save all
+    #     every_n_epochs=args.save_interval,
+    #     filename="{epoch}-{val_loss:.4f}-{test_loss:.4f}",
+    # )
+    # early_stopping = EarlyStopping("val_loss", patience=args.early_stopping_patience)
 
     csv_logger = CSVLogger(args.log_dir, name="", version="")
     _logger=[csv_logger]
@@ -151,23 +151,25 @@ def main():
         )
         _logger.append(tb_logger)
 
-    trainer = pl.Trainer(
-        strategy=DDPStrategy(find_unused_parameters=False),
-        max_epochs=args.num_epochs,
-        gpus=args.ngpus,
-        num_nodes=args.num_nodes,
-        default_root_dir=args.log_dir,
-        auto_lr_find=False,
-        resume_from_checkpoint=None if args.reset_trainer else args.load_model,
-        callbacks=[early_stopping, checkpoint_callback],
-        logger=_logger,
-        precision=args.precision,
-    )
+    # trainer = pl.Trainer(
+    #     strategy=DDPStrategy(find_unused_parameters=False),
+    #     max_epochs=args.num_epochs,
+    #     gpus=args.ngpus,
+    #     num_nodes=args.num_nodes,
+    #     default_root_dir=args.log_dir,
+    #     auto_lr_find=False,
+    #     resume_from_checkpoint=None if args.reset_trainer else args.load_model,
+    #     callbacks=[early_stopping, checkpoint_callback],
+    #     logger=_logger,
+    #     precision=args.precision,
+    # )
 
-    trainer.fit(model, data)
+    # trainer.fit(model, data)
 
     # run test set after completing the fit
-    model = LNNP.load_from_checkpoint(trainer.checkpoint_callback.best_model_path)
+    import pdb; pdb.set_trace()
+    # from torchmdnet.models.model import create_model, load_model
+    model = LNNP.load_from_checkpoint("/home/sire/phd/srz228573/benchmarking_datasets/fone_output/equiformer/npz_lips/se_l2/best_val_epochs@74_e@0.0833_f@0.0510.pth.tar")
     trainer = pl.Trainer(logger=_logger)
     trainer.test(model, data)
 

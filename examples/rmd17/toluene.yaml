@@ -8,8 +8,8 @@ cutoff_lower: 0.0
 cutoff_upper: 5.0
 dataset: MD17
 dataset_arg:
-  molecules: aspirin
-dataset_root: /home/sire/phd/srz228573/torchmd-net/bench_data_sl/torchmdnet_data/md17/aspirin
+  molecules: toluene
+dataset_root: /home/sire/phd/srz228573/torchmd-net/bench_data_sl/fone_dataset/mdsim_data/mace_data_sl/rmd17/npz_data/toluene/
 derivative: true
 distance_influence: both
 early_stopping_patience: 300
@@ -23,7 +23,7 @@ force_files: null
 neg_dy_weight: 0.8
 inference_batch_size: 64
 load_model: null
-log_dir: /home/sire/phd/srz228573/torchmd-net/bench_data_sl/torchmdnet_data/md17/aspirin/logs/
+log_dir: /home/sire/phd/srz228573/torchmd-net/bench_data_sl/fone_output/torchmdnet/rmd17/toluene/logs/
 lr: 0.001
 lr_factor: 0.8
 lr_min: 1.0e-07

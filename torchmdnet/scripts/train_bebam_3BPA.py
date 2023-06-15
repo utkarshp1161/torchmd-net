@@ -9,7 +9,7 @@ from pytorch_lightning.loggers import CSVLogger, WandbLogger
 from pytorch_lightning.strategies.ddp import DDPStrategy
 from torchmdnet.module import LNNP
 from torchmdnet import datasets, priors, models
-from torchmdnet.data import DataModule
+from torchmdnet.data_bebam_3BPA import DataModule
 from torchmdnet.models import output_modules
 from torchmdnet.models.model import create_prior_models
 from torchmdnet.models.utils import rbf_class_mapping, act_class_mapping

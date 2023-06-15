@@ -109,7 +109,11 @@ def load_model(filepath, args=None, device="cpu", **kwargs):
     if 'prior_model.atomref.weight' in state_dict:
         state_dict['prior_model.0.atomref.weight'] = state_dict['prior_model.atomref.weight']
         del state_dict['prior_model.atomref.weight']
-    model.load_state_dict(state_dict)
+
+    
+    model.load_state_dict(state_dict, strict = False)
+    #model.load_state_dict(dict([(n, p) for n, p in state_dict.items()]), strict=False)
+
     return model.to(device)
 
 
@@ -199,7 +203,7 @@ class TorchMD_Net(nn.Module):
         extra_args: Optional[Dict[str, Tensor]] = None
     ) -> Tuple[Tensor, Optional[Tensor]]:
 
-        assert z.dim() == 1 and z.dtype == torch.long
+        # assert z.dim() == 1 and z.dtype == torch.long
         batch = torch.zeros_like(z) if batch is None else batch
 
         if self.derivative:

@@ -83,22 +83,21 @@ class MD17(InMemoryDataset):
         return super(MD17, self).get(idx - self.offsets[data_idx])
 
     @property
-    def raw_file_names(self):
+    def raw_file_names(self):#A list of files in the raw_dir which needs to be found in order to skip the download.
         return [MD17.molecule_files[mol] for mol in self.molecules]
 
     @property
-    def processed_file_names(self):
+    def processed_file_names(self):# A list of files in the processed_dir which needs to be found in order to skip the processing.
         return [f"md17-{mol}.pt" for mol in self.molecules]
 
-    def download(self):
+    def download(self):#Downloads raw data into raw_dir
         for file_name in self.raw_file_names:
-            import pdb as pdb
-            pdb.set_trace()
             download_url(MD17.raw_url + file_name, self.raw_dir)
 
-    def process(self):
+    def process(self):#Processes raw data and saves it into the processed_dir
         for raw_path, processed_path in zip(self.raw_paths, self.processed_paths):
-            data_npz = np.load(raw_path)
+            import pdb; pdb.set_trace()
+            data_npz = np.load(raw_path)#'/home/sire/phd/srz228573/torchmd-net/bench_data_sl/torchmdnet_data/md17/aspirin/raw/md17_aspirin.npz'
             z = torch.from_numpy(data_npz["z"]).long()
             positions = torch.from_numpy(data_npz["R"]).float()
             energies = torch.from_numpy(data_npz["E"]).float()
